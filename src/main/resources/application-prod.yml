@@ -1,0 +1,8 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+logging:
+  level:
+    org.hibernate.sql: info
+    org.hibernate.type.descriptor.sql: trace
