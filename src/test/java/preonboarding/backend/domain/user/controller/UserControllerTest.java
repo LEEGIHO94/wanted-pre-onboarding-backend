@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.domain.recruit_announcement.mock.RecruitAnnouncementMock;
 import preonboarding.backend.domain.user.dto.UserPostRequestDto;
+import preonboarding.backend.domain.user.dto.UserRecruitPostRequestDto;
 import preonboarding.backend.domain.user.entity.Recruit;
 import preonboarding.backend.domain.user.entity.User;
 import preonboarding.backend.domain.user.service.UserService;
@@ -35,7 +36,7 @@ class UserControllerTest {
     @MockBean
     UserService service;
     ObjectMapper objectMapper = new ObjectMapper();
-    RecruitAnnouncementMock mock;
+    RecruitAnnouncementMock mock = new RecruitAnnouncementMock();
 
     @Test
     @DisplayName("사용자 등록 테스트")
@@ -65,10 +66,13 @@ class UserControllerTest {
         Recruit recruit = new Recruit(userMock, mock.getAfterRepoMock());
         userMock.getRecruitList().add(recruit);
 
+        UserRecruitPostRequestDto post = new UserRecruitPostRequestDto(1L);
+        String content = objectMapper.writeValueAsString(post);
+
         given(service.recruit(ArgumentMatchers.any(User.class), ArgumentMatchers.any(
                 RecruitAnnouncement.class))).willReturn(userMock);
         // when
-        ResultActions perform = mvc.perform(post(DEFAULT + "/recruit/{announcement-id}", 1L));
+        ResultActions perform = mvc.perform(post(DEFAULT + "/recruit/{announcement-id}", 1L).content(content).contentType(MediaType.APPLICATION_JSON));
         // then
         perform
                 .andDo(MockMvcResultHandlers.log())
