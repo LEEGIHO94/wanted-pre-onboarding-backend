@@ -54,7 +54,6 @@ class UserServiceTest {
         User postUser = new User("김복자", "email", "password!!");
 
         given(repository.findByEmail(anyString())).willReturn(Optional.of(userMock));
-        given(repository.save(any(User.class))).willReturn(userMock);
         // when
         // then
         Assertions.assertThatThrownBy(() -> service.postUser(postUser)).isInstanceOf(
