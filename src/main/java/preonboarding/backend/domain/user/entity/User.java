@@ -10,14 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Builder.Default;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import preonboarding.backend.domain.Auditable;
 
 @Entity
 @Getter
-@NoArgsConstructor
 public class User extends Auditable {
 
     @Id
@@ -31,7 +28,7 @@ public class User extends Auditable {
     @Column(length = 32)
     private String password;
 
-    @Default
+
     @OneToMany(cascade = CascadeType.ALL)
     private List<Recruit> recruitList = new ArrayList<>();
 
@@ -52,5 +49,8 @@ public class User extends Auditable {
 
     public User(Long userId) {
         this.id = userId;
+    }
+
+    public User() {
     }
 }
