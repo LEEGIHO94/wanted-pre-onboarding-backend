@@ -60,7 +60,7 @@ public class RecruitAnnouncementService {
                 .ifPresent(savedData::setCompensationForEmployment);
     }
 
-    private RecruitAnnouncement validAnnouncement(Long id) {
+    public RecruitAnnouncement validAnnouncement(Long id) {
         return repository.findById(id).orElseThrow(() -> new BusinessLogicException(
                 ANNOUNCEMENT_NOT_FOUND));
     }
