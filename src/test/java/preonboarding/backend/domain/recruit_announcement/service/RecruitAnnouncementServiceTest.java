@@ -3,6 +3,7 @@ package preonboarding.backend.domain.recruit_announcement.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -17,6 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import preonboarding.backend.domain.company.entity.Company;
 import preonboarding.backend.domain.company.service.CompanyService;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
@@ -111,4 +115,20 @@ class RecruitAnnouncementServiceTest {
         // then
         Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(get);
     }
+
+    @Test
+    @DisplayName("채용 공고 조회 : 성공")
+    void get_announcement_page_test() throws Exception {
+        // given
+        Page<RecruitAnnouncement> pageMock = mock.pageMock();
+
+        given(repository.findPageSearchByParameterOrAll(any(Pageable.class),
+                anyString())).willReturn(pageMock);
+        // when
+        Page<RecruitAnnouncement> result = service.findAnnouncementPage(PageRequest.of(0, 30),
+                "Java");
+        // then
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(pageMock);
+    }
+
 }
