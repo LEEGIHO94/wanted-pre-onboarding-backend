@@ -2,6 +2,10 @@ package preonboarding.backend.domain.user.controller;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +30,7 @@ import preonboarding.backend.utils.UriBuilder;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Tag(name = "사용자 API",description = "사용자 관련 API 존재, 사용자 등록, 채용 공고")
 public class UserController {
 
     private static final String DEFAULT = "/api/users";
@@ -34,8 +39,10 @@ public class UserController {
     private final RecruitAnnouncementMapper announcementMapper;
 
     @PostMapping
+    @ApiResponse(responseCode = "201")
+    @Operation(summary = "사용자 등록",description = "사용자 등록, email,username, password 전부 필수")
     public ResponseEntity<ResponseDto<UserIdResponseDto>> postUser(
-            @RequestBody UserPostRequestDto post) {
+            @RequestBody @Valid UserPostRequestDto post) {
         User request = userMapper.toEntity(post);
 
         User result = service.postUser(request);
@@ -47,9 +54,10 @@ public class UserController {
     }
 
     @PostMapping("/recruit/{announcement-id}")
+    @Operation(summary = "채용 공고 등록",description = "채용 공고 등록, userId 필수,\n test 시 announcement-id = 1 권장")
     public ResponseEntity<ResponseDto<UserRecruitPostResponseDto>> postRecruit(
             @PathVariable("announcement-id") Long announceId,
-            @RequestBody UserRecruitPostRequestDto post) {
+            @RequestBody @Valid UserRecruitPostRequestDto post) {
         post.setAnnouncementId(announceId);
         User requestUser = userMapper.toEntity(post.getUserId());
         RecruitAnnouncement requestAnnounce = announcementMapper.toEntity(post.getAnnouncementId());
