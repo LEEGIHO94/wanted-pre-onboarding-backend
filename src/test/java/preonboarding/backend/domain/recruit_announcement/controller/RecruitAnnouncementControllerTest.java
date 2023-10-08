@@ -1,6 +1,7 @@
 package preonboarding.backend.domain.recruit_announcement.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -131,4 +134,23 @@ class RecruitAnnouncementControllerTest {
                         "$.data.companyResponseDto.otherRecruitAnnouncementList").isArray());
     }
 
+    @Test
+    @DisplayName("채용 공고 키워드 조회")
+    void get_announcement_page_test() throws Exception {
+        // given
+        Page<RecruitAnnouncement> afterServiceMock = mock.pageMock();
+        given(service.findAnnouncementPage(any(Pageable.class), anyString())).willReturn(
+                afterServiceMock);
+        // when
+        ResultActions perform = mvc.perform(
+                MockMvcRequestBuilders.get(DEFAULT).param("search", "Java"));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[0].skill").value("Python"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[1].skill").value("Python"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data[2].skill").value("Python"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.pageInfo.pageNumber").value(0));
+    }
 }
