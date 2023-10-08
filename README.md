@@ -1,7 +1,7 @@
 ## 프로젝트 소개
   
 - 기업의 채용을 위한 웹 서비스 백엔드 API
-
+- 배포 URL : 13.209.54.119
 ## 구조
 ```sh
   backend
@@ -13,7 +13,8 @@
        ┗dto
     ┗dto
     ┗excetpion
-    ┗utils 
+    ┗utils
+    ┗config 
 ```
 - domain : 각 도메인이 구현되어 있습니다. 각각 controller, service, repository, exception, dto 로 구현되어 있습니다.
      - dto : 각 도메인에서 사용하는 dto가 구현 되어 있습니다.
@@ -21,6 +22,7 @@
 - dto : 공통으로 사용하는 Wrapping dto가 구현 되어 있습니다.
 - exception : 예외 처리를 위한 AOP가 구현되어 있습니다.
 - utils : 공통으로 사용하는 utils들이 구현 되어 있습니다.
+- config : 설정 관련 파일들이 구현되어 있습니다.
 
 실행 방법
 1. git clone 
@@ -33,10 +35,29 @@
 ```
 3. 프로젝트 실행
 ```sh
-  ./gradlew build -PactiveProfile=prod
+  ./gradlew build -PactiveProfile=prod --exclude-task test
   java -jar -Dspring.profiles.active=prod build/libs/backend-0.0.1-SNAPSHOT.jar.jar
 ```
-### 핵심기능
+- test완료 시 소나큐브에 등록하는 과정에서 소나큐브 url을 등록하지 않을 경우 에러가 발생하기 때문에 이를 방지 하기  위해 테스트 제외한 빌드 진행
+- 구현한 테스트의 경우는 사진 파일 첨부
+## 배포
+<img width="588" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/741bda69-0877-4ac6-86ff-00e957439c43">
+
+- EC2에 배포하였으며, AWS의 EC2와 RDS를 활용했습니다.
+- EC2와 RDS를 같은 VPC로 묶어 EC2를 통해서만 RDS에 진입할 수 있도록 설정해 보안을 강화했습니다.
+
+### 배포 순서
+<img width="1185" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/6559a3c1-913f-42a7-a1a7-abd5657831c5">
+1. Build 시 테스트 진행
+2. 테스트 이 후 테스트 결과를 바탕으로 테스트 커버리지 수집(jacoco)
+3. sonarqube에 데이터 전달
+    1. 성공 시 Build
+    2. 실패 시 Build Fail
+
+
+
+
+## 핵심기능
 
 - 채용공고 등록
 - 채용공고 수정
@@ -46,7 +67,7 @@
 - 채용상세 조회
 - 채용공고 지원
 
-### 사용 기술 스택
+## 사용 기술 스택
 
 - Java 17
 - SpringBoot 3.1.4
@@ -78,7 +99,7 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
 
 ## API 명세서
 
-- [Swagger API 명세서](http://localhost:8080/swagger-ui)
+- [Swagger API 명세서](http://13.209.54.119:8080/swagger-ui)
   
     - 프로젝트 **애플리케이션 RUN** 후 링크를 클릭하면 확인 가능합니다.
 
@@ -179,6 +200,7 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
 - RequestParam 으로 search (ex)/api/announcement?search="원티드") 를 사용
 - search 에 데이터를 넣지 않으면 전체 데이터가 출력되도록 구현했습니다.
 - 구현을 위해 동적 쿼리를 이용해서 구현했습니다.
+- 작성한 쿼리에 대한 단위 테스트를 통해 작동 여부 확인
 <details>
 <summary><strong> findAnnouncementPage</strong></summary>
 <div markdown="1">       
@@ -195,7 +217,26 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
         return ResponseEntity.ok(responseDto);
     }
 ```
+</div>
+</details>
 
+<details>
+<summary><strong> findPageSearchByParameterOrAll - DB에서 동적 쿼리로 조회 하는 메서드</strong></summary>
+<div markdown="1">       
+
+```java
+    @Query("SELECT r FROM RecruitAnnouncement r WHERE " +
+            "(:search is null OR " +
+            "r.company.name LIKE %:search% OR " +
+            "r.skill LIKE %:search% OR " +
+            "r.content LIKE %:search% OR " +
+            "r.recruitPosition LIKE %:search%)")
+    Page<RecruitAnnouncement> findPageSearchByParameterOrAll(Pageable pageable,
+            @Param("search") String search);
+    }
+```
+</div>
+</details>
 
 ---
 
@@ -218,6 +259,8 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
         return ResponseEntity.ok(responseDto);
     }
 ```
+</div>
+</details>
 ---
 
 ### 채용공고 지원
@@ -249,7 +292,8 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
 </div>
 </details>
 
-- 유저의 채용공고 지원은 UserRecruitment 라믄 User - Recruitment 간 N : N 관계의 중간 테이블로 구현했습니다.
+- 채용 공고 지원은 Recruit Announcement 보다는 User와 더 연관이 있다고 판단 User 도메인에 구현
+- 연결 테이블의 역할을 수행하며 RecruitAnnouncement 와 User의 관계인 N:M 을 1:N, M:1의 관계로 변경하기 위해 사용
 - Status Enum 클래스를 통해 지원여부 상태를 구분합니다.
 - 이미 지원한 상태라면 지원하지 못하도록 예외처리가 적용되어 있습니다.
 <details>
@@ -271,3 +315,8 @@ public void apply(UserRecruitment userRecruitment) {
 
 </div>
 </details>
+
+## 테스트
+<img width="338" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/2bb82f39-0c07-40e2-887b-082bcf6552d6">
+진행한 테스트 모두 성공
+
