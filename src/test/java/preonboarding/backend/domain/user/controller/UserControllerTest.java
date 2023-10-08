@@ -17,7 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
+import preonboarding.backend.domain.recruit_announcement.mock.RecruitAnnouncementMock;
 import preonboarding.backend.domain.user.dto.UserPostRequestDto;
+import preonboarding.backend.domain.user.entity.Recruit;
 import preonboarding.backend.domain.user.entity.User;
 import preonboarding.backend.domain.user.service.UserService;
 
@@ -32,6 +35,7 @@ class UserControllerTest {
     @MockBean
     UserService service;
     ObjectMapper objectMapper = new ObjectMapper();
+    RecruitAnnouncementMock mock;
 
     @Test
     @DisplayName("사용자 등록 테스트")
@@ -51,5 +55,25 @@ class UserControllerTest {
                 .andDo(MockMvcResultHandlers.log())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId").value(userMock.getId()));
+    }
+
+    @Test
+    @DisplayName("채용공고 지원 테스트")
+    void post_recruit_test() throws Exception {
+        // given
+        User userMock = new User(1L, "김복자", "email@gmail.com", "password!!");
+        Recruit recruit = new Recruit(userMock, mock.getAfterRepoMock());
+        userMock.getRecruitList().add(recruit);
+
+        given(service.recruit(ArgumentMatchers.any(User.class), ArgumentMatchers.any(
+                RecruitAnnouncement.class))).willReturn(userMock);
+        // when
+        ResultActions perform = mvc.perform(post(DEFAULT + "/recruit/{announcement-id}", 1L));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.companyId").value(1L));
     }
 }

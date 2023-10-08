@@ -25,4 +25,9 @@ public class Recruit {
     private User user;
     @ManyToOne
     private RecruitAnnouncement recruitAnnouncement;
+
+    public Recruit(User user, RecruitAnnouncement recruitAnnouncement) {
+        this.user = user;
+        this.recruitAnnouncement = recruitAnnouncement;
+    }
 }
