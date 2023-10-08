@@ -2,6 +2,8 @@ package preonboarding.backend.domain.company.controller;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import preonboarding.backend.utils.UriBuilder;
 @RestController
 @RequestMapping("/api/companies")
 @RequiredArgsConstructor
+@Tag(name = "회사 API", description = "회사 등록 API")
 public class CompanyController {
 
     private static final String DEFAULT = "/api/companies";
@@ -27,6 +30,7 @@ public class CompanyController {
     private final CompanyMapper mapper;
 
     @PostMapping
+    @Operation(summary = "회사 등록을 위한 API")
     public ResponseEntity<ResponseDto<CompanyIdResponseDto>> postCompany(
             @RequestBody CompanyPostRequestDto post) {
         Company request = mapper.toEntity(post);
