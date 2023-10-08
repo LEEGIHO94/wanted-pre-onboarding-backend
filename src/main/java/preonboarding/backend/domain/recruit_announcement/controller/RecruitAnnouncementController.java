@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,4 +62,12 @@ public class RecruitAnnouncementController {
         return ResponseEntity.ok().header("location", location.toString()).body(responseDto);
     }
 
+    @DeleteMapping("/{announcement-id}")
+    public ResponseEntity deleteAnnouncement(@PathVariable("announcement-id") Long announcementId) {
+        RecruitAnnouncement request = mapper.toEntity(announcementId);
+
+        service.deleteAnnouncement(request);
+
+        return ResponseEntity.noContent().build();
+    }
 }

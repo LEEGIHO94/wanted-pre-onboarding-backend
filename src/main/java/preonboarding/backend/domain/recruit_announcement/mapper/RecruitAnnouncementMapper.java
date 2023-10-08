@@ -34,7 +34,11 @@ public class RecruitAnnouncementMapper {
                 .build();
     }
 
-
+    public RecruitAnnouncement toEntity(Long announcementId) {
+        return RecruitAnnouncement.builder()
+                .id(announcementId)
+                .build();
+    }
     public ResponseDto<AnnouncementIdResponseDto> toResponseDto(RecruitAnnouncement result,
             HttpStatus status) {
         return ResponseDto.<AnnouncementIdResponseDto>builder()
