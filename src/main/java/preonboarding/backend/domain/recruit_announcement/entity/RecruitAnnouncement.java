@@ -44,5 +44,8 @@ public class RecruitAnnouncement extends Auditable {
     @ManyToOne(fetch = LAZY)
     private Company company;
 
-
+    public void addAnnounceToCompany(Company company) {
+        this.company = company;
+        company.getRecruitmentAnnouncementList().add(this);
+    }
 }

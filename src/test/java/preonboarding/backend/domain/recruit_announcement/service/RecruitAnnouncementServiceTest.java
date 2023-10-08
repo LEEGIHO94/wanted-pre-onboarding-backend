@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import preonboarding.backend.domain.company.entity.Company;
+import preonboarding.backend.domain.company.service.CompanyService;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.domain.recruit_announcement.exception.RecruitAnnouncementExceptionCode;
 import preonboarding.backend.domain.recruit_announcement.mock.RecruitAnnouncementMock;
@@ -30,6 +32,8 @@ class RecruitAnnouncementServiceTest {
     RecruitAnnouncementService service;
     @Mock
     RecruitAnnouncementRepository repository;
+    @Mock
+    CompanyService companyService;
     RecruitAnnouncementMock mock = new RecruitAnnouncementMock();
 
     @Test
@@ -37,9 +41,11 @@ class RecruitAnnouncementServiceTest {
     void post_announcement_test() throws Exception {
         // given
         RecruitAnnouncement announcementMock = mock.postAfterMapperMock();
+        Company savedCompany = new Company(1L, "원티드");
 
         RecruitAnnouncement post = mock.postAfterSaveMock();
 
+        given(companyService.findCompany(any(Company.class))).willReturn(savedCompany);
         given(repository.save(any(RecruitAnnouncement.class)))
                 .willReturn(announcementMock);
         // when

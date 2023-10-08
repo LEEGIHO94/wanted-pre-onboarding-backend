@@ -6,6 +6,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import preonboarding.backend.domain.company.entity.Company;
+import preonboarding.backend.domain.company.service.CompanyService;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.domain.recruit_announcement.repository.RecruitAnnouncementRepository;
 import preonboarding.backend.exception.BusinessLogicException;
@@ -16,8 +18,10 @@ import preonboarding.backend.exception.BusinessLogicException;
 public class RecruitAnnouncementService {
 
     private final RecruitAnnouncementRepository repository;
-
+    private final CompanyService companyService;
     public RecruitAnnouncement postAnnouncement(RecruitAnnouncement announcement) {
+        Company company = companyService.findCompany(announcement.getCompany());
+        announcement.addAnnounceToCompany(company);
         return repository.save(announcement);
     }
 
