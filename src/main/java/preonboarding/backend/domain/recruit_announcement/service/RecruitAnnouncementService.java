@@ -33,6 +33,10 @@ public class RecruitAnnouncementService {
         repository.deleteById(announcement.getId());
     }
 
+    @Transactional(readOnly = true)
+    public RecruitAnnouncement findAnnouncement(RecruitAnnouncement announcement) {
+        return validAnnouncement(announcement.getId());
+    }
 
     private void changeAnnouncement(RecruitAnnouncement announcement,
             RecruitAnnouncement savedData) {
