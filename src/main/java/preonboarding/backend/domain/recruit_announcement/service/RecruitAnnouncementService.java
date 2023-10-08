@@ -29,6 +29,10 @@ public class RecruitAnnouncementService {
         return savedData;
     }
 
+    public void deleteAnnouncement(RecruitAnnouncement announcement) {
+        repository.deleteById(announcement.getId());
+    }
+
 
     private void changeAnnouncement(RecruitAnnouncement announcement,
             RecruitAnnouncement savedData) {
