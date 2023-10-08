@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    password: ${DATABASE_PASSWORD}
+    username: ${DATABASE_ID}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    properties:
+      default_batch_fetch_size: 100
+      hibernate:
+        highlight_sql: true
+        show_sql: true
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org.hibernate.sql: info
+    org.hibernate.type.descriptor.sql: trace
