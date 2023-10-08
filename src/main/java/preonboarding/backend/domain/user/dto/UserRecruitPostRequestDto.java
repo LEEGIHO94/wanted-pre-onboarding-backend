@@ -17,4 +17,8 @@ public class UserRecruitPostRequestDto {
     @Schema(hidden = true)
     @Positive
     private Long announcementId;
+
+    public UserRecruitPostRequestDto(Long announcementId) {
+        this.announcementId = announcementId;
+    }
 }
