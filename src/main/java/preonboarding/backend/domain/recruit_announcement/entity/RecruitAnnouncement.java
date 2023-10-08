@@ -43,4 +43,6 @@ public class RecruitAnnouncement extends Auditable {
 
     @ManyToOne(fetch = LAZY)
     private Company company;
+
+
 }

@@ -5,6 +5,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
@@ -74,5 +77,18 @@ class RecruitAnnouncementServiceTest {
         Assertions.assertThat(result.getRecruitPosition()).isEqualTo(patch.getRecruitPosition());
         Assertions.assertThat(result.getWorkingArea()).isEqualTo(patch.getWorkingArea());
         Assertions.assertThat(result.getSkill()).isEqualTo(patch.getSkill());
+    }
+
+    @Test
+    @DisplayName("채용 공고 삭제 : 성공")
+    void delete_announcement_test() throws Exception {
+        // given
+        RecruitAnnouncement delete = mock.idMock();
+
+        willDoNothing().given(repository).deleteById(anyLong());
+        // when
+        service.deleteAnnouncement(delete);
+        // then
+        verify(repository, times(1)).deleteById(anyLong());
     }
 }

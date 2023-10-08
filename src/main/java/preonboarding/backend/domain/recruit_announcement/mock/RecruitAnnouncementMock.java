@@ -41,4 +41,10 @@ public class RecruitAnnouncementMock {
     public RecruitAnnouncement getAfterRepoMock() {
         return postAfterSaveMock();
     }
+
+    public RecruitAnnouncement idMock() {
+        return RecruitAnnouncement.builder()
+                .id(1L)
+                .build();
+    }
 }
