@@ -1,7 +1,6 @@
 ## 프로젝트 소개
   
 - 기업의 채용을 위한 웹 서비스 백엔드 API
-- 배포 URL : 13.209.54.119
 ## 구조
 ```sh
   backend
@@ -36,18 +35,12 @@
 3. 프로젝트 실행
 ```sh
   ./gradlew build -PactiveProfile=prod --exclude-task test
-  java -jar -Dspring.profiles.active=prod build/libs/backend-0.0.1-SNAPSHOT.jar.jar
+  java -jar -Dspring.profiles.active=prod build/libs/backend-0.0.1-SNAPSHOT.jar
 ```
 - test완료 시 소나큐브에 등록하는 과정에서 소나큐브 url을 등록하지 않을 경우 에러가 발생하기 때문에 이를 방지 하기  위해 테스트 제외한 빌드 진행
 - 구현한 테스트의 경우는 사진 파일 첨부
-## 배포
-<img width="588" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/741bda69-0877-4ac6-86ff-00e957439c43">
 
-- EC2에 배포하였으며, AWS의 EC2와 RDS를 활용했습니다.
-- EC2와 RDS를 같은 VPC로 묶어 EC2를 통해서만 RDS에 진입할 수 있도록 설정해 보안을 강화했습니다.
-
-### 배포 순서
-<img width="1185" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/6559a3c1-913f-42a7-a1a7-abd5657831c5">
+### Build 순서
 1. Build 시 테스트 진행
 2. 테스트 이 후 테스트 결과를 바탕으로 테스트 커버리지 수집(jacoco)
 3. sonarqube에 데이터 전달
