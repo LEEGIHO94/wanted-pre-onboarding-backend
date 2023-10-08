@@ -25,4 +25,20 @@ public class RecruitAnnouncementMock {
                 .company(new Company(1L))
                 .build();
     }
+
+    public RecruitAnnouncement patchAfterMapperMock() {
+        return RecruitAnnouncement.builder()
+                .id(1L)
+                .recruitPosition("백엔드 시니어 개발자")
+                .compensationForEmployment(0)
+                .content("원티드랩에서 백엔드 시니어 개발자를 채용합니다.")
+                .skill("Java")
+                .company(new Company(1L))
+                .build();
+    }
+
+
+    public RecruitAnnouncement getAfterRepoMock() {
+        return postAfterSaveMock();
+    }
 }
