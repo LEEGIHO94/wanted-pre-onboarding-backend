@@ -1,10 +1,12 @@
 package preonboarding.backend.domain.recruit_announcement.controller;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +46,7 @@ class RecruitAnnouncementControllerTest {
 
         RecruitAnnouncement resultMock = mock.postAfterSaveMock();
 
-        BDDMockito.given(service.postAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class)))
+        given(service.postAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class)))
                 .willReturn(resultMock);
         // when
         ResultActions perform = mvc.perform(MockMvcRequestBuilders.post(DEFAULT).content(content)
@@ -66,7 +68,7 @@ class RecruitAnnouncementControllerTest {
 
         RecruitAnnouncement resultMock = mock.postAfterSaveMock();
 
-        BDDMockito.given(service.patchAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class)))
+        given(service.patchAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class)))
                 .willReturn(resultMock);
         // when
         ResultActions perform = mvc.perform(
@@ -78,6 +80,23 @@ class RecruitAnnouncementControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.announcementId")
                         .value(resultMock.getId()));
+    }
+
+    @Test
+    @DisplayName("채용 공고 삭제")
+    void delete_announcement_test() throws Exception {
+        // given
+
+        willDoNothing().given(service)
+                .deleteAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class));
+
+        // when
+        ResultActions perform = mvc.perform(
+                MockMvcRequestBuilders.delete(DEFAULT + "/{announcement-id}", 1L));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
 }
