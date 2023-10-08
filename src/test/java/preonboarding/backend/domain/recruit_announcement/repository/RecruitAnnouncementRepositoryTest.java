@@ -104,7 +104,24 @@ class RecruitAnnouncementRepositoryTest {
 
     }
 
-    
+    @Test
+    @DisplayName("Java 로 조회")
+    void save_test() throws Exception {
+        Company one = companyRepository.save(new Company("원티드"));
+
+        RecruitAnnouncement announcement = RecruitAnnouncement.builder()
+                .skill("Java")
+                .content("이것은 컨텐츠다.")
+                .recruitPosition("백엔드")
+                .company(one)
+                .compensationForEmployment(10000)
+                .workingArea("서울")
+                .build();
+        RecruitAnnouncement result = recruitAnnouncementRepository.save(announcement);
+
+        Assertions.assertThat(result.getId()).isNotNull();
+    }
+
 
     private String randomDate(List<String> contentList) {
         Random random = new Random();
