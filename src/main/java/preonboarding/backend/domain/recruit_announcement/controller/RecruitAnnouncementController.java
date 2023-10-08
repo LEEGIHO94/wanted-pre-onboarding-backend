@@ -98,7 +98,7 @@ public class RecruitAnnouncementController {
     }
 
     @GetMapping
-    @Operation(description = "채용 공고 전체 조회 \n search 가 없을 경우 전체 조회 진행 \n url?page=0&size=30&sort=id과 같은 방식으로 요청, 기본값이 각각 존재", summary = "채용 공고 삭제")
+    @Operation(description = "채용 공고 전체 조회 \n search 가 없을 경우 전체 조회 진행 \n url?page=0&size=30&sort=id과 같은 방식으로 요청, 기본값이 각각 존재", summary = "채용 공고 조건별 검색")
     public ResponseEntity<ResponsePageDto<AnnouncementGetDetailResponseDto>> findAnnouncementPage(
             @Parameter(hidden = true)Pageable pageable,
             @RequestParam(name = "search", required = false) String search) {
