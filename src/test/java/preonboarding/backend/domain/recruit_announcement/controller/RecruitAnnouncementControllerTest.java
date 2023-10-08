@@ -1,5 +1,6 @@
 package preonboarding.backend.domain.recruit_announcement.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
@@ -97,6 +98,37 @@ class RecruitAnnouncementControllerTest {
         perform
                 .andDo(MockMvcResultHandlers.log())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("채용 공고 단건 조회")
+    void get_announcement_test() throws Exception {
+        // given
+        RecruitAnnouncement afterServiceMock = mock.getAfterRepoMock();
+
+        given(service.findAnnouncement(any(RecruitAnnouncement.class))).willReturn(
+                afterServiceMock);
+        // when
+        ResultActions perform = mvc.perform(
+                MockMvcRequestBuilders.get(DEFAULT + "/{announcement-id}", 1L));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.announcementId")
+                        .value(afterServiceMock.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.workingArea")
+                        .value(afterServiceMock.getWorkingArea()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.recruitPosition")
+                        .value(afterServiceMock.getRecruitPosition()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.compensationForEmployment")
+                        .value(afterServiceMock.getCompensationForEmployment()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content")
+                        .value(afterServiceMock.getContent()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.companyResponseDto.companyName")
+                        .value(afterServiceMock.getCompany().getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath(
+                        "$.data.companyResponseDto.otherRecruitAnnouncementList").isArray());
     }
 
 }
