@@ -4,6 +4,8 @@ import static preonboarding.backend.domain.recruit_announcement.exception.Recrui
 
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import preonboarding.backend.domain.company.entity.Company;
@@ -40,6 +42,11 @@ public class RecruitAnnouncementService {
     @Transactional(readOnly = true)
     public RecruitAnnouncement findAnnouncement(RecruitAnnouncement announcement) {
         return validAnnouncement(announcement.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<RecruitAnnouncement> findAnnouncementPage(Pageable pageable, String search) {
+        return repository.findPageSearchByParameterOrAll(pageable, search);
     }
 
     private void changeAnnouncement(RecruitAnnouncement announcement,
