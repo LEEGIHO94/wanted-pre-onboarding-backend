@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import preonboarding.backend.domain.company.entity.Company;
+import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 
 public class RecruitAnnouncementMock {
@@ -74,6 +75,17 @@ public class RecruitAnnouncementMock {
                 .content("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..")
                 .skill("Python")
                 .company(new Company(1L))
+                .build();
+    }
+
+    public AnnouncementPostRequestDto postDtoMock() {
+        return AnnouncementPostRequestDto.builder()
+                .companyId(1L)
+                .workingArea("서울")
+                .skill("Java")
+                .recruitPosition("백엔드 개발자")
+                .content("원티드에서 백엔드 주니어 개발자를 채용합니다.")
+                .compensationForEmployment(200000)
                 .build();
     }
 }

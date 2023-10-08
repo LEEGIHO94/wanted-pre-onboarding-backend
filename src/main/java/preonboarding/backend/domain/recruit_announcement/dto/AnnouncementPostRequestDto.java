@@ -3,11 +3,13 @@ package preonboarding.backend.domain.recruit_announcement.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class AnnouncementPostRequestDto {
