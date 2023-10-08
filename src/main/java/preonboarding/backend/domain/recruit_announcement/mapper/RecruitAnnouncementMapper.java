@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import preonboarding.backend.domain.company.entity.Company;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementIdResponseDto;
+import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPatchRequestDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.dto.ResponseDto;
@@ -22,6 +23,18 @@ public class RecruitAnnouncementMapper {
                 .build();
     }
 
+    public RecruitAnnouncement toEntity(AnnouncementPatchRequestDto patch) {
+        return RecruitAnnouncement.builder()
+                .id(patch.getAnnouncementId())
+                .recruitPosition(patch.getRecruitPosition())
+                .content(patch.getContent())
+                .skill(patch.getSkill())
+                .compensationForEmployment(patch.getCompensationForEmployment())
+                .workingArea(patch.getWorkingArea())
+                .build();
+    }
+
+
     public ResponseDto<AnnouncementIdResponseDto> toResponseDto(RecruitAnnouncement result,
             HttpStatus status) {
         return ResponseDto.<AnnouncementIdResponseDto>builder()
@@ -33,4 +46,5 @@ public class RecruitAnnouncementMapper {
     private AnnouncementIdResponseDto toIdResponseDto(RecruitAnnouncement recruitAnnouncement) {
         return new AnnouncementIdResponseDto(recruitAnnouncement.getId());
     }
+
 }
