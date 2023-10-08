@@ -1,6 +1,7 @@
 package preonboarding.backend.domain.recruit_announcement.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,6 @@ class RecruitAnnouncementRepositoryTest {
     RecruitAnnouncementRepository recruitAnnouncementRepository;
     @Autowired
     CompanyRepository companyRepository;
-
     @BeforeEach
     void init() {
         Company one = companyRepository.save(new Company("원티드"));
@@ -78,6 +78,33 @@ class RecruitAnnouncementRepositoryTest {
         }
     }
 
+    @Test
+    @DisplayName("Java 로 조회")
+    void get_test() throws Exception {
+        Company one = companyRepository.save(new Company("원티드"));
+
+        RecruitAnnouncement announcement = RecruitAnnouncement.builder()
+                .skill("Java")
+                .content("이것은 컨텐츠다.")
+                .recruitPosition("백엔드")
+                .company(one)
+                .compensationForEmployment(10000)
+                .workingArea("서울")
+                .build();
+        RecruitAnnouncement save = recruitAnnouncementRepository.save(announcement);
+
+        Optional<RecruitAnnouncement> result = recruitAnnouncementRepository.findById(save.getId());
+
+        Assertions.assertThat(result.get().getSkill()).isEqualTo(announcement.getSkill());
+        Assertions.assertThat(result.get().getContent()).isEqualTo(announcement.getContent());
+        Assertions.assertThat(result.get().getRecruitPosition())
+                .isEqualTo(announcement.getRecruitPosition());
+        Assertions.assertThat(result.get().getCompensationForEmployment())
+                .isEqualTo(announcement.getCompensationForEmployment());
+
+    }
+
+    
 
     private String randomDate(List<String> contentList) {
         Random random = new Random();
