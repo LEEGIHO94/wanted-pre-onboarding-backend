@@ -91,4 +91,18 @@ class RecruitAnnouncementServiceTest {
         // then
         verify(repository, times(1)).deleteById(anyLong());
     }
+
+    @Test
+    @DisplayName("채용 공고 조회 : 성공")
+    void get_announcement_test() throws Exception {
+        // given
+        RecruitAnnouncement get = mock.getAfterRepoMock();
+        RecruitAnnouncement idEntity = mock.idMock();
+
+        given(repository.findById(anyLong())).willReturn(Optional.of(get));
+        // when
+        RecruitAnnouncement result = service.findAnnouncement(idEntity);
+        // then
+        Assertions.assertThat(result).usingRecursiveComparison().isEqualTo(get);
+    }
 }
