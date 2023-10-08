@@ -8,12 +8,14 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementGetDetailResponseDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementIdResponseDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPatchRequestDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
@@ -40,7 +42,7 @@ public class RecruitAnnouncementController {
 
         RecruitAnnouncement result = service.postAnnouncement(request);
 
-        var responseDto = mapper.toResponseDto(result, CREATED);
+        var responseDto = mapper.toIdResponseDto(result, CREATED);
         URI location = UriBuilder.createUri(DEFAULT, result.getId());
 
         return ResponseEntity.created(location).body(responseDto);
@@ -56,7 +58,7 @@ public class RecruitAnnouncementController {
 
         RecruitAnnouncement result = service.patchAnnouncement(request);
 
-        var responseDto = mapper.toResponseDto(result, OK);
+        var responseDto = mapper.toIdResponseDto(result, OK);
         URI location = UriBuilder.createUri(DEFAULT, result.getId());
 
         return ResponseEntity.ok().header("location", location.toString()).body(responseDto);
@@ -69,5 +71,17 @@ public class RecruitAnnouncementController {
         service.deleteAnnouncement(request);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{announcement-id}")
+    public ResponseEntity<ResponseDto<AnnouncementGetDetailResponseDto>> findAnnouncement(
+            @PathVariable("announcement-id") Long announcementId) {
+        RecruitAnnouncement request = mapper.toEntity(announcementId);
+
+        RecruitAnnouncement result = service.findAnnouncement(request);
+
+        var responseDto = mapper.toResponseDto(result, OK);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

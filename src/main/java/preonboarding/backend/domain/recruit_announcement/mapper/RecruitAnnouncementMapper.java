@@ -1,8 +1,11 @@
 package preonboarding.backend.domain.recruit_announcement.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import preonboarding.backend.domain.company.entity.Company;
+import preonboarding.backend.domain.company.mapper.CompanyMapper;
+import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementGetDetailResponseDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementIdResponseDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPatchRequestDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
@@ -10,7 +13,10 @@ import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncem
 import preonboarding.backend.dto.ResponseDto;
 
 @Component
+@RequiredArgsConstructor
 public class RecruitAnnouncementMapper {
+
+    private final CompanyMapper mapper;
 
     public RecruitAnnouncement toEntity(AnnouncementPostRequestDto post) {
         return RecruitAnnouncement.builder()
@@ -39,16 +45,42 @@ public class RecruitAnnouncementMapper {
                 .id(announcementId)
                 .build();
     }
-    public ResponseDto<AnnouncementIdResponseDto> toResponseDto(RecruitAnnouncement result,
+
+    public ResponseDto<AnnouncementIdResponseDto> toIdResponseDto(RecruitAnnouncement result,
             HttpStatus status) {
         return ResponseDto.<AnnouncementIdResponseDto>builder()
-                .data(toIdResponseDto(result))
+                .data(toIdResponse(result))
                 .status(status)
                 .build();
     }
 
-    private AnnouncementIdResponseDto toIdResponseDto(RecruitAnnouncement recruitAnnouncement) {
+    public ResponseDto<AnnouncementGetDetailResponseDto> toResponseDto(RecruitAnnouncement result,
+            HttpStatus httpStatus) {
+        return ResponseDto.<AnnouncementGetDetailResponseDto>builder()
+                .data(toResponse(result))
+                .status(httpStatus)
+                .build();
+    }
+
+
+    private AnnouncementIdResponseDto toIdResponse(RecruitAnnouncement recruitAnnouncement) {
         return new AnnouncementIdResponseDto(recruitAnnouncement.getId());
+    }
+
+    private AnnouncementGetDetailResponseDto toResponse(RecruitAnnouncement recruitAnnouncement) {
+        return AnnouncementGetDetailResponseDto.builder()
+                .announcementId(recruitAnnouncement.getId())
+                .createdDate(recruitAnnouncement.getCreatedAt())
+                .modifiedDate(recruitAnnouncement.getModifiedAt())
+                .compensationForEmployment(recruitAnnouncement.getCompensationForEmployment())
+                .recruitPosition(recruitAnnouncement.getRecruitPosition())
+                .workingArea(recruitAnnouncement.getWorkingArea())
+                .compensationForEmployment(recruitAnnouncement.getCompensationForEmployment())
+                .skill(recruitAnnouncement.getSkill())
+                .companyResponseDto(mapper.toResponseDto(recruitAnnouncement.getCompany(),
+                        recruitAnnouncement.getId()))
+                .content(recruitAnnouncement.getContent())
+                .build();
     }
 
 }
