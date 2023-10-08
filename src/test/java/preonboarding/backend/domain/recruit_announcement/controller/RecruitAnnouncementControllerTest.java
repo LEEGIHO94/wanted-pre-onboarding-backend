@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPatchRequestDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.domain.recruit_announcement.mock.RecruitAnnouncementMock;
@@ -52,6 +53,29 @@ class RecruitAnnouncementControllerTest {
         perform
                 .andDo(MockMvcResultHandlers.log())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.announcementId")
+                        .value(resultMock.getId()));
+    }
+
+    @Test
+    @DisplayName("채용 공고 수정")
+    void patch_announcement_test() throws Exception {
+        // given
+        AnnouncementPatchRequestDto patch = mock.patchDtoMock();
+        String content = objectMapper.writeValueAsString(patch);
+
+        RecruitAnnouncement resultMock = mock.postAfterSaveMock();
+
+        BDDMockito.given(service.patchAnnouncement(ArgumentMatchers.any(RecruitAnnouncement.class)))
+                .willReturn(resultMock);
+        // when
+        ResultActions perform = mvc.perform(
+                MockMvcRequestBuilders.patch(DEFAULT + "/{announcement-id}", 1L).content(content)
+                        .contentType(MediaType.APPLICATION_JSON));
+        // then
+        perform
+                .andDo(MockMvcResultHandlers.log())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data.announcementId")
                         .value(resultMock.getId()));
     }
