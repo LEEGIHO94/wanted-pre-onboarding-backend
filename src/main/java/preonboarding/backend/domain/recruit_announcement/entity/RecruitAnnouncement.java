@@ -13,12 +13,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import preonboarding.backend.domain.Auditable;
 import preonboarding.backend.domain.company.entity.Company;
 
 @Entity
 @Getter
 @Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecruitAnnouncement extends Auditable {
@@ -32,7 +34,7 @@ public class RecruitAnnouncement extends Auditable {
     @Column(nullable = false)
     private String workingArea;
     @Column(nullable = false)
-    private int compensationForEmployment;
+    private Integer compensationForEmployment;
     @Column(nullable = false)
     private String skill;
     @Lob
