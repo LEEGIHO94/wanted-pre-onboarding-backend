@@ -9,14 +9,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import preonboarding.backend.domain.Auditable;
 import preonboarding.backend.domain.company.entity.Company;
 
 @Entity
 @Getter
+@Builder
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class RecruitAnnouncement extends Auditable {
 
     @Id
@@ -28,7 +34,7 @@ public class RecruitAnnouncement extends Auditable {
     @Column(nullable = false)
     private String workingArea;
     @Column(nullable = false)
-    private int compensationForEmployment;
+    private Integer compensationForEmployment;
     @Column(nullable = false)
     private String skill;
     @Lob
@@ -37,4 +43,9 @@ public class RecruitAnnouncement extends Auditable {
 
     @ManyToOne(fetch = LAZY)
     private Company company;
+
+    public void addAnnounceToCompany(Company company) {
+        this.company = company;
+        company.getRecruitmentAnnouncementList().add(this);
+    }
 }

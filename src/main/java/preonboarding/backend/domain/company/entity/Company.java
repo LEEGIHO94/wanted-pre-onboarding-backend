@@ -35,4 +35,8 @@ public class Company {
         this.id = id;
         this.name = name;
     }
+
+    public Company(Long id) {
+        this.id = id;
+    }
 }
