@@ -1,6 +1,8 @@
 package preonboarding.backend.domain.recruit_announcement.mapper;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import preonboarding.backend.domain.company.entity.Company;
@@ -11,6 +13,7 @@ import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPatchRe
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementPostRequestDto;
 import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncement;
 import preonboarding.backend.dto.ResponseDto;
+import preonboarding.backend.dto.ResponsePageDto;
 
 @Component
 @RequiredArgsConstructor
@@ -62,6 +65,19 @@ public class RecruitAnnouncementMapper {
                 .build();
     }
 
+    public ResponsePageDto<AnnouncementGetDetailResponseDto> toPageResponseDto(
+            Page<RecruitAnnouncement> result, HttpStatus status) {
+
+        return ResponsePageDto.<AnnouncementGetDetailResponseDto>builder()
+                .pageNumber(result.getPageable().getPageNumber())
+                .totalPage(result.getTotalPages())
+                .first(result.isFirst())
+                .last(result.isLast())
+                .status(status)
+                .data(toListResponse(result.getContent()))
+                .build();
+    }
+
 
     private AnnouncementIdResponseDto toIdResponse(RecruitAnnouncement recruitAnnouncement) {
         return new AnnouncementIdResponseDto(recruitAnnouncement.getId());
@@ -83,4 +99,7 @@ public class RecruitAnnouncementMapper {
                 .build();
     }
 
+    private List<AnnouncementGetDetailResponseDto> toListResponse(List<RecruitAnnouncement> list) {
+        return list.stream().map(this::toResponse).toList();
+    }
 }

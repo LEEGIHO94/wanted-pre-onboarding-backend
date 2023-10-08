@@ -6,6 +6,8 @@ import static org.springframework.http.HttpStatus.OK;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementGetDetailResponseDto;
 import preonboarding.backend.domain.recruit_announcement.dto.AnnouncementIdResponseDto;
@@ -23,6 +26,7 @@ import preonboarding.backend.domain.recruit_announcement.entity.RecruitAnnouncem
 import preonboarding.backend.domain.recruit_announcement.mapper.RecruitAnnouncementMapper;
 import preonboarding.backend.domain.recruit_announcement.service.RecruitAnnouncementService;
 import preonboarding.backend.dto.ResponseDto;
+import preonboarding.backend.dto.ResponsePageDto;
 import preonboarding.backend.utils.UriBuilder;
 
 @RestController
@@ -81,6 +85,17 @@ public class RecruitAnnouncementController {
         RecruitAnnouncement result = service.findAnnouncement(request);
 
         var responseDto = mapper.toResponseDto(result, OK);
+
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<ResponsePageDto<AnnouncementGetDetailResponseDto>> findAnnouncementPage(
+            Pageable pageable,
+            @RequestParam(name = "search", required = false) String search) {
+
+        Page<RecruitAnnouncement> result = service.findAnnouncementPage(pageable, search);
+        var responseDto = mapper.toPageResponseDto(result, OK);
 
         return ResponseEntity.ok(responseDto);
     }
