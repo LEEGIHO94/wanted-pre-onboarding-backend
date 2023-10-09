@@ -1,6 +1,8 @@
 ## 프로젝트 소개
   
 - 기업의 채용을 위한 웹 서비스 백엔드 API
+- 배포 URL : http://3.37.87.77
+- 사용한 port : 8080 
 ## 구조
 ```sh
   backend
@@ -40,15 +42,20 @@
 - test완료 시 소나큐브에 등록하는 과정에서 소나큐브 url을 등록하지 않을 경우 에러가 발생하기 때문에 이를 방지 하기  위해 테스트 제외한 빌드 진행
 - 구현한 테스트의 경우는 사진 파일 첨부
 
-### Build 순서
+## 배포
+![image](https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/04b91382-00a2-4286-b923-ff7d9e2dbcef)
+- EC2를 통해 프로젝트의 배포 진행
+- DataBase는 RDS(MySQL)를 활용해서 구현
+- RDS, EC2 같은 VPC에 넣어 RDS 접속을 EC2에서만 가능하게 제한해 RDS에 대한 보안 추가
+
+### 배포 순서
+![image](https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/f651ac5b-f29b-4e97-8c90-221f7a313dbd)
+
 1. Build 시 테스트 진행
 2. 테스트 이 후 테스트 결과를 바탕으로 테스트 커버리지 수집(jacoco)
 3. sonarqube에 데이터 전달
     1. 성공 시 Build
     2. 실패 시 Build Fail
-
-
-
 
 ## 핵심기능
 
@@ -92,9 +99,9 @@ URL : [ERD_LINK](https://www.erdcloud.com/d/xkXnsBGJBsmgv9bps)
 
 ## API 명세서
 
-- [Swagger API 명세서](http://13.209.54.119:8080/swagger-ui)
-  
-    - 프로젝트 **애플리케이션 RUN** 후 링크를 클릭하면 확인 가능합니다.
+- [Swagger API 명세서](http://3.37.87.77:8080/swagger-ui/index.html)
+  - post는 예시 데이터를 추가해둔 상태
+
 
 ### Test Code
 
@@ -312,4 +319,9 @@ public void apply(UserRecruitment userRecruitment) {
 ## 테스트
 <img width="338" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/2bb82f39-0c07-40e2-887b-082bcf6552d6">
 진행한 테스트 모두 성공
+
+## 소나큐브를 활용한 리펙토링
+<img width="988" alt="image" src="https://github.com/LEEGIHO94/wanted-pre-onboarding-backend/assets/116015708/b2525ae9-a578-4cb8-904a-82e0c4abb9c2">
+- 정적 분석 도구를 활용해 코드의 품질 향상을 위한 수정 진행
+
 
